@@ -122,7 +122,17 @@ export const CATEGORIES: CategoryDefinition[] = [
     fileExtensions: ['.pdf', '.epub', '.mobi'],
     accentColor: 'from-rose-700/90 to-stone-900',
   },
-];
+  {
+    id: 'home',
+    name: 'แบบบ้าน',
+    nameEn: 'House Plans & Architecture',
+    tagline: 'แบบแปลนบ้าน ภาพเรนเดอร์ และโมเดลสถาปัตยกรรม',
+    description: 'รวมแบบบ้าน แบบแปลน และไฟล์โมเดลสำหรับงานออกแบบสถาปัตยกรรม',
+    image: '/house-category.svg',
+    fileExtensions: ['.pdf', '.dwg', '.skp', '.fbx', '.obj'],
+    accentColor: 'from-amber-500/90 to-blue-950',
+  },
+]; 
 
 export const CATEGORY_MAP: Record<CategoryId, CategoryDefinition> = Object.fromEntries(
   CATEGORIES.map((c) => [c.id, c])
