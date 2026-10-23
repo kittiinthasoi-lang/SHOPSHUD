@@ -27,7 +27,7 @@ function score(p: Product, tokens: string[]): number {
   const name = `${p.name} ${p.nameEn}`.toLowerCase();
   const kw = p.keywords.join(' ').toLowerCase();
   const platform = (p.affiliatePlatform || '').toLowerCase();
-  const rest = `${CATEGORY_LABEL[p.category]} ${STORE_BY_ID[p.storeId]?.name ?? ''} ${platform} ${p.specs.map((s) => s.value).join(' ')}`.toLowerCase();
+  const rest = `${CATEGORY_LABEL[p.category] ?? ''} ${STORE_BY_ID[p.storeId]?.name ?? ''} ${platform} ${(p.specs || []).map((s: { label: string; value: string }) => s.value).join(' ')}`.toLowerCase();
   let total = 0;
   for (const t of tokens) {
     let s = 0;

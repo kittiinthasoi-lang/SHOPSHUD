@@ -11,3 +11,11 @@ export const AFFILIATE_PLATFORMS: { id: string; name: string; color: string; avg
 export const STORES: Store[] = [];
 export const STORE_BY_ID: Record<string, Store> = {};
 export const PRODUCTS: Product[] = [];
+
+export function highlightsOf(p: Product): string[] {
+  if (p.specs && p.specs.length > 0) {
+    return p.specs.slice(0, 3).map((s: { label: string; value: string }) => `${s.label}: ${s.value}`);
+  }
+  return p.keywords ? p.keywords.slice(0, 3) : [];
+}
+

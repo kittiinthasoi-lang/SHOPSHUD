@@ -1,43 +1,58 @@
-const KEY = 'chonchad:v1';
+import type { DigitalFile, PurchaseRecord, UserProfile } from './types';
 
-export interface LocalState {
-  v: 1;
-  compare: string[];
-  searches: number;
-  clicks: Record<string, number>;
-  searchTerms: Record<string, number>;
+const STORAGE_KEY = 'shopshud_digital_store_v1';
+
+export interface AppState {
+  version: 1;
+  files: DigitalFile[];
+  profile: UserProfile;
+  purchases: PurchaseRecord[];
 }
 
-export const emptyState = (): LocalState => ({ v: 1, compare: [], searches: 0, clicks: {}, searchTerms: {} });
+export const initialProfile: UserProfile = {
+  displayName: 'ผู้สร้างดิจิทัล',
+  handle: '@creator_digital',
+  bio: 'สร้างสรรค์และแบ่งปันไฟล์ดิจิทัลคุณภาพ มีลิขสิทธิ์ถูกต้อง พร้อมส่งมอบงานรวดเร็ว',
+  email: 'creator@shopshud.local',
+  promptPay: '081-999-8888',
+  avatarUrl: '',
+  joinedDate: 'ตุลาคม 2026',
+};
 
-const isCount = (n: unknown): n is number => typeof n === 'number' && Number.isFinite(n) && n >= 0;
+export const defaultState = (): AppState => ({
+  version: 1,
+  files: [], // Empty as explicitly requested: "ไม่ต้องใส่ข้อมูลจำลองเอาแค่โครงสร้างตามนี้"
+  profile: initialProfile,
+  purchases: [],
+});
 
-export function loadState(validIds: string[]): { state: LocalState; healthy: boolean } {
+export function loadAppState(): AppState {
+  if (typeof window === 'undefined') return defaultState();
   try {
-    const raw = window.localStorage.getItem(KEY);
-    if (!raw) return { state: emptyState(), healthy: true };
-    const d = JSON.parse(raw);
-    if (!d || d.v !== 1) return { state: emptyState(), healthy: true };
-    const s = emptyState();
-    if (Array.isArray(d.compare))
-      s.compare = d.compare.filter((x: unknown): x is string => typeof x === 'string' && validIds.includes(x)).slice(0, 3);
-    if (isCount(d.searches)) s.searches = Math.floor(d.searches);
-    for (const field of ['clicks', 'searchTerms'] as const) {
-      if (d[field] && typeof d[field] === 'object') {
-        for (const [k, v] of Object.entries(d[field])) if (isCount(v)) s[field][k] = Math.floor(v);
-      }
-    }
-    return { state: s, healthy: true };
-  } catch {
-    return { state: emptyState(), healthy: false };
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return defaultState();
+    const data = JSON.parse(raw);
+    if (!data || data.version !== 1) return defaultState();
+
+    return {
+      version: 1,
+      files: Array.isArray(data.files) ? data.files : [],
+      profile: data.profile ? { ...initialProfile, ...data.profile } : initialProfile,
+      purchases: Array.isArray(data.purchases) ? data.purchases : [],
+    };
+  } catch (error) {
+    console.error('Failed to load local app state:', error);
+    return defaultState();
   }
 }
 
-export function saveState(s: LocalState): boolean {
+export function saveAppState(state: AppState): boolean {
+  if (typeof window === 'undefined') return false;
   try {
-    window.localStorage.setItem(KEY, JSON.stringify(s));
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     return true;
-  } catch {
+  } catch (error) {
+    console.error('Failed to save local app state:', error);
     return false;
   }
 }

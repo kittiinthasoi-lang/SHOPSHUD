@@ -4,25 +4,31 @@ import { ErrorBoundary } from '@/components/error-boundary';
 import { Layout } from '@/components/layout';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import Admin from '@/pages/admin';
-import Assistant from '@/pages/assistant';
-import Compare from '@/pages/compare';
-import Deals from '@/pages/deals';
+import { StoreProvider } from '@/lib/store';
 import Home from '@/pages/home';
+import StorePage from '@/pages/store';
+import ProfilePage from '@/pages/profile';
 import NotFound from '@/pages/not-found';
 import { Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
 
 const queryClient = new QueryClient();
 
-function Router() {
-  return <RoutedErrorBoundary><Switch>
-    <Route path="/" component={Home} />
-    <Route path="/deals" component={Deals} />
-    <Route path="/compare" component={Compare} />
-    <Route path="/assistant" component={Assistant} />
-    <Route path="/admin" component={Admin} />
-    <Route component={NotFound} />
-  </Switch></RoutedErrorBoundary>;
+function AppRoutes() {
+  return (
+    <RoutedErrorBoundary>
+      <Switch>
+        <Route path="/" component={Home} />
+        <Route path="/store" component={StorePage} />
+        <Route path="/profile" component={ProfilePage} />
+        {/* Backward compatible redirects to Home */}
+        <Route path="/deals" component={Home} />
+        <Route path="/compare" component={Home} />
+        <Route path="/assistant" component={Home} />
+        <Route path="/admin" component={StorePage} />
+        <Route component={NotFound} />
+      </Switch>
+    </RoutedErrorBoundary>
+  );
 }
 
 function RoutedErrorBoundary({ children }: { children: ReactNode }) {
@@ -31,14 +37,20 @@ function RoutedErrorBoundary({ children }: { children: ReactNode }) {
 }
 
 function App() {
-  return <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
-        <Layout><Router /></Layout>
-      </WouterRouter>
-      <Toaster />
-    </TooltipProvider>
-  </QueryClientProvider>;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <StoreProvider>
+          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
+            <Layout>
+              <AppRoutes />
+            </Layout>
+          </WouterRouter>
+          <Toaster />
+        </StoreProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
 }
 
 export default App;

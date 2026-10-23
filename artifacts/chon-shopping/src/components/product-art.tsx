@@ -4,8 +4,12 @@ import {
   BookOpen,
   Car,
   Dumbbell,
+  GraduationCap,
+  Image as ImageIcon,
   Laptop,
   Luggage,
+  Music,
+  Paintbrush,
   PawPrint,
   Shirt,
   Sparkles,
@@ -14,8 +18,14 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import type { CategoryId, Product } from '@/lib/types';
+import { useState } from 'react';
 
-export const CATEGORY_ICON: Record<CategoryId, LucideIcon> = {
+export const CATEGORY_ICON: Record<string, LucideIcon> = {
+  music: Music,
+  photo: ImageIcon,
+  drawing: Paintbrush,
+  exam: GraduationCap,
+  ebook: BookOpen,
   electronics: Laptop,
   home: Sofa,
   beauty: Sparkles,
@@ -30,13 +40,11 @@ export const CATEGORY_ICON: Record<CategoryId, LucideIcon> = {
   books: BookOpen,
 };
 
-import { useState } from 'react';
-
 /** Shows high-resolution product photography with responsive fallback */
 export function ProductArt({ product, className = '' }: { product: Product; className?: string }) {
   const [error, setError] = useState(false);
-  const Icon = CATEGORY_ICON[product.category];
-  const h = product.hue;
+  const Icon = CATEGORY_ICON[product.category] || BookOpen;
+  const h = product.hue || 200;
 
   if (product.image && !error) {
     return (
@@ -60,12 +68,6 @@ export function ProductArt({ product, className = '' }: { product: Product; clas
       aria-label={`ภาพของ ${product.name}`}
       style={{ background: `hsl(${h} 45% 90%)` }}
     >
-      <svg viewBox="0 0 200 150" className="absolute inset-0 h-full w-full" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-        <circle cx="160" cy="25" r="60" fill={`hsl(${h} 50% 80%)`} />
-        <circle cx="20" cy="140" r="55" fill={`hsl(${(h + 30) % 360} 55% 84%)`} />
-        <rect x="48" y="118" width="104" height="8" rx="4" fill={`hsl(${h} 40% 30% / 0.14)`} />
-        <path d="M0 150 L200 150 L200 132 Q100 118 0 134 Z" fill={`hsl(${h} 40% 78%)`} />
-      </svg>
       <div className="absolute inset-0 flex items-center justify-center">
         <div
           className="flex h-16 w-16 items-center justify-center rounded-2xl shadow-md"
