@@ -149,10 +149,10 @@ export default function Home() {
                   // Smooth scroll to files list
                   document.getElementById('files-catalog')?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className={`group relative flex flex-col text-left overflow-hidden rounded-2xl border transition-all duration-200 hover:-translate-y-1 hover:shadow-md ${
+                className={`group relative flex flex-col text-left overflow-hidden rounded-xl border bg-card/95 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg ${
                   isSelected
-                    ? 'border-primary ring-2 ring-primary bg-card shadow-sm'
-                    : 'border-border/80 bg-card hover:border-border'
+                    ? 'border-primary ring-2 ring-primary/80 shadow-lg'
+                    : ({ music: 'border-cyan-400/50 hover:border-cyan-300', photo: 'border-blue-400/50 hover:border-blue-300', drawing: 'border-violet-400/50 hover:border-violet-300', exam: 'border-sky-400/50 hover:border-sky-300', ebook: 'border-amber-400/60 hover:border-amber-300' } as Record<CategoryId, string>)[cat.id]
                 }`}
               >
                 {/* Image Cover */}
