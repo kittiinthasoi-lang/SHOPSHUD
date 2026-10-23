@@ -59,12 +59,8 @@ router.post("/owner/catalog", requireOwner, async (req, res, next) => {
       res.status(400).json({ error: "Required fields are missing or invalid. Provide title, description, category, priceMinor, rightsModel and rightsTerms." });
       return;
     }
-    if (status === "published" && (!assetObjectKey || assetVerified !== true)) {
-      res.status(400).json({ error: "Publication blocked: a real private asset must be uploaded and verified first. File upload/storage is not configured yet." });
-      return;
-    }
-    if (rightsModel === "copyright_transfer" && !rightsTerms.toLowerCase().includes("agreement")) {
-      res.status(400).json({ error: "Copyright transfer requires explicit agreement terms. Have the transfer document reviewed before publishing." });
+    if (status === "published") {
+      res.status(503).json({ error: "Publication is disabled until private asset storage, server-side file verification, and rights-document handling are implemented. Save this product as a draft for now." });
       return;
     }
     const id = randomUUID();
@@ -105,8 +101,8 @@ router.patch("/owner/catalog/:id", requireOwner, async (req, res, next) => {
         !["draft","published","paused"].includes(values.status)) {
       res.status(400).json({ error: "Product fields are invalid." }); return;
     }
-    if (values.status === "published" && (!values.assetObjectKey || values.assetVerified !== true)) {
-      res.status(400).json({ error: "Publication blocked: a real private asset must be uploaded and verified first. File upload/storage is not configured yet." }); return;
+    if (values.status === "published") {
+      res.status(503).json({ error: "Publication is disabled until private asset storage, server-side file verification, and rights-document handling are implemented." }); return;
     }
     const { rows } = await pool.query(
       `UPDATE shopshud_products SET title=$2,description=$3,category=$4,price_minor=$5,rights_model=$6,rights_terms=$7,preview_url=$8,asset_object_key=$9,asset_verified=$10,status=$11,published_at=CASE WHEN $11='published' THEN COALESCE(published_at,now()) ELSE NULL END,updated_at=now()
