@@ -79,18 +79,18 @@ export default function Home() {
   };
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-8">
       {/* Hero Section */}
-      <section className="text-center max-w-3xl mx-auto pt-2 pb-4">
-        <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground leading-tight text-balance">
+      <section className="text-center max-w-3xl mx-auto pt-1 pb-2">
+        <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-foreground leading-tight text-balance">
           ศูนย์รวมไฟล์ดิจิทัล ซื้อขายสะดวก สิทธิ์ชัดเจน
         </h1>
-        <p className="mt-3.5 text-base sm:text-lg text-muted-foreground leading-relaxed text-balance">
+        <p className="mt-2.5 text-sm sm:text-base text-muted-foreground leading-relaxed text-balance">
           ดาวน์โหลดไฟล์ต้นฉบับคุณภาพสูงจากผู้สร้าง ทั้งดนตรี ภาพถ่าย งานวาด ข้อสอบ และอีบุ๊ก พร้อมส่งมอบไฟล์ทันที
         </p>
 
         {/* Search Bar */}
-        <div className="mt-6 flex max-w-xl mx-auto items-center rounded-2xl border border-input bg-card shadow-sm px-3.5 py-2 focus-within:ring-2 focus-within:ring-primary focus-within:border-transparent transition-all">
+        <div className="mt-4 flex max-w-xl mx-auto items-center rounded-2xl border border-input bg-card shadow-sm px-3.5 py-2 focus-within:ring-2 focus-within:ring-primary focus-within:border-transparent transition-all">
           <Search className="h-4 w-4 text-muted-foreground shrink-0 mr-2" />
           <input
             type="text"
@@ -135,7 +135,7 @@ export default function Home() {
         </div>
 
         {/* 5 Category Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4">
           {CATEGORIES.map((cat) => {
             const count = getCategoryCount(cat.id);
             const isSelected = activeCategory === cat.id;
@@ -156,29 +156,29 @@ export default function Home() {
                 }`}
               >
                 {/* Image Cover */}
-                <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
+                <div className="relative aspect-[5/3] w-full overflow-hidden bg-slate-950">
                   <img
                     src={cat.image}
                     alt={cat.name}
                     referrerPolicy="no-referrer"
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
-                  <div className={`absolute inset-0 bg-gradient-to-t ${cat.accentColor} opacity-70`} />
-                  <div className="absolute top-2.5 left-2.5 flex h-8 w-8 items-center justify-center rounded-lg bg-black/40 text-white backdrop-blur-sm">
+                  <div className={`absolute inset-0 bg-gradient-to-br ${({ music: "from-cyan-500/35 via-blue-500/15", photo: "from-blue-500/35 via-indigo-500/15", drawing: "from-violet-500/35 via-fuchsia-500/10", exam: "from-sky-400/35 via-blue-500/10", ebook: "from-amber-400/25 via-yellow-500/10" } as Record<CategoryId, string>)[cat.id]} to-transparent`} />
+                  <div className={`absolute top-2 left-2 flex h-7 w-7 items-center justify-center rounded-lg backdrop-blur-sm ${({ music: "bg-cyan-400/20 text-cyan-200", photo: "bg-blue-400/20 text-blue-200", drawing: "bg-violet-400/20 text-violet-200", exam: "bg-sky-400/20 text-sky-200", ebook: "bg-amber-400/20 text-amber-200" } as Record<CategoryId, string>)[cat.id]}`}>
                     {getCategoryIcon(cat.id)}
                   </div>
-                  <span className="absolute bottom-2 right-2.5 text-[11px] font-medium text-white/90 bg-black/50 px-2 py-0.5 rounded-md backdrop-blur-xs">
+                  <span className="absolute bottom-2 right-2 text-[10px] font-semibold text-white/95 bg-slate-950/70 px-1.5 py-0.5 rounded-md backdrop-blur-xs">
                     {count} ไฟล์
                   </span>
                 </div>
 
                 {/* Card Body */}
-                <div className="p-3.5 flex flex-col flex-1 justify-between gap-2">
+                <div className="p-2.5 sm:p-3 flex flex-col flex-1 justify-between gap-1.5">
                   <div>
-                    <h3 className="font-semibold text-sm text-foreground leading-snug group-hover:text-primary transition-colors">
+                    <h3 className="font-semibold text-xs sm:text-sm text-foreground leading-snug line-clamp-2 group-hover:text-primary transition-colors">
                       {cat.name}
                     </h3>
-                    <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-1">
+                    <p className="text-[10px] sm:text-[11px] text-muted-foreground mt-1 line-clamp-2">
                       {cat.tagline}
                     </p>
                   </div>
@@ -275,7 +275,7 @@ export default function Home() {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
             {filteredFiles.map((file) => {
               const cat = CATEGORY_MAP[file.category];
               const owned = hasPurchased(file.id);
@@ -286,7 +286,7 @@ export default function Home() {
                   className="group flex flex-col overflow-hidden rounded-2xl border border-border/80 bg-card shadow-xs hover:-translate-y-1 hover:shadow-md transition-all duration-200"
                 >
                   {/* File Thumbnail or Cover */}
-                  <div className="relative aspect-[16/10] w-full overflow-hidden bg-muted">
+                  <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-950">
                     {file.previewUrl ? (
                       <img
                         src={file.previewUrl}
@@ -319,12 +319,12 @@ export default function Home() {
                   </div>
 
                   {/* Content Details */}
-                  <div className="p-4 flex flex-col flex-1 gap-2.5">
+                  <div className="p-2.5 sm:p-3 flex flex-col flex-1 gap-2">
                     <div>
-                      <h4 className="font-semibold text-base text-foreground line-clamp-1 group-hover:text-primary transition-colors">
+                      <h4 className="font-semibold text-xs sm:text-sm text-foreground line-clamp-2 group-hover:text-primary transition-colors">
                         {file.title}
                       </h4>
-                      <p className="mt-1 text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                      <p className="mt-1 text-[10px] sm:text-xs text-muted-foreground line-clamp-2 leading-relaxed">
                         {file.description}
                       </p>
                     </div>
@@ -341,7 +341,7 @@ export default function Home() {
                     {/* Pricing & CTA */}
                     <div className="mt-auto pt-3 flex items-center justify-between border-t border-border/60">
                       <div>
-                        <span className="font-display text-xl font-bold text-primary">
+                        <span className="font-display text-base sm:text-lg font-bold text-primary">
                           {file.price === 0 ? 'ฟรี (0 บาท)' : `฿${file.price.toLocaleString('th-TH')}`}
                         </span>
                       </div>
