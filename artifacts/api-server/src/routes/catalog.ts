@@ -28,12 +28,18 @@ const safeProduct = (row: Record<string, unknown>) => ({
   assetVerified: row.asset_verified, status: row.status, createdAt: row.created_at, updatedAt: row.updated_at,
 });
 
+const publicProduct = (row: Record<string, unknown>) => ({
+  id: row.id, title: row.title, description: row.description, category: row.category,
+  priceMinor: row.price_minor, currency: row.currency, rightsModel: row.rights_model,
+  rightsTerms: row.rights_terms, previewUrl: row.preview_url, status: row.status,
+});
+
 router.get("/catalog", async (_req, res, next) => {
   try {
     const { rows } = await pool.query(
       "SELECT id,title,description,category,price_minor,currency,rights_model,rights_terms,preview_url,asset_object_key,asset_verified,status,created_at,updated_at FROM shopshud_products WHERE status = 'published' ORDER BY published_at DESC, created_at DESC"
     );
-    res.json({ products: rows.map(safeProduct) });
+    res.json({ products: rows.map(publicProduct) });
   } catch (error) { next(error); }
 });
 
