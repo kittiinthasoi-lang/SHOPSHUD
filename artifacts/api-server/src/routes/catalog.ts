@@ -1,5 +1,5 @@
 import { Router, type IRouter } from "express";
-import { randomUUID } from "node:crypto";
+import { randomUUID, timingSafeEqual } from "node:crypto";
 import { pool } from "@workspace/db";
 
 const router: IRouter = Router();
@@ -14,7 +14,7 @@ function requireOwner(req: import("express").Request, res: import("express").Res
   const supplied = auth.startsWith("Bearer ") ? auth.slice(7) : "";
   const a = Buffer.from(supplied);
   const b = Buffer.from(expected);
-  if (a.length !== b.length || !a.length || !require("node:crypto").timingSafeEqual(a, b)) {
+  if (a.length !== b.length || !a.length || !timingSafeEqual(a, b)) {
     res.status(401).json({ error: "Owner authentication required." });
     return;
   }
