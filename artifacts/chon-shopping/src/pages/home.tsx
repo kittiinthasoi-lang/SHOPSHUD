@@ -238,7 +238,7 @@ export default function Home() {
 
           <div className="flex items-center justify-between sm:justify-end gap-3 text-xs text-muted-foreground">
             <span>
-              แสดง {filteredFiles.length} รายการ
+              แสดงผลงานแนะนำ {Math.min(filteredFiles.length, 4)} จาก {filteredFiles.length} รายการ
               {activeCategory !== 'all' && ` ในหมวด ${CATEGORY_MAP[activeCategory]?.name}`}
             </span>
             <Link
@@ -279,7 +279,7 @@ export default function Home() {
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-3 sm:gap-4">
-            {filteredFiles.map((file) => {
+            {filteredFiles.slice(0, 4).map((file) => {
               const cat = CATEGORY_MAP[file.category];
               const owned = hasPurchased(file.id);
 
