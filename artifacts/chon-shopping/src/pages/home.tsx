@@ -16,7 +16,7 @@ export default function Home() {
         <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm"><ShieldCheck className="h-4 w-4" /> ร้านค้าของผู้สร้างโดยตรง</span>
         <h1 className="font-display text-4xl font-bold leading-tight md:text-6xl">เปลี่ยนความคิด<br />ให้กลายเป็นสินทรัพย์</h1>
         <p className="max-w-2xl text-base leading-relaxed text-primary-foreground/85 md:text-lg">SHOPSHUD คือร้านผลงานดิจิทัลของเรา ตั้งแต่เพลงและงานเขียน ไปจนถึงความรู้และเครื่องมือ ทุกชิ้นต้องมีผลงานจริง ราคา และเงื่อนไขสิทธิ์ที่ชัดเจน</p>
-        <p className="text-sm text-primary-foreground/70">แคตตาล็อกกำลังเตรียมพร้อม — ขณะนี้ยังไม่มีสินค้าที่เปิดขายจริง</p>
+        <p className="text-sm text-primary-foreground/70">ดูผลงานที่เผยแพร่แล้วได้ในหน้า “ผลงาน” หากยังไม่มีรายการ ระบบจะแสดงสถานะว่างแทนสินค้าจำลอง</p>
       </div>
     </section>
 
