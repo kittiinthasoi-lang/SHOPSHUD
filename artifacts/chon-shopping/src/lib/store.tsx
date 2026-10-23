@@ -22,6 +22,44 @@ interface StoreContextValue {
 
 const StoreContext = createContext<StoreContextValue | null>(null);
 
+export function hexToHsl(hex: string): { hslStr: string; isLight: boolean } {
+  const cleanHex = hex.replace('#', '');
+  const r = parseInt(cleanHex.substring(0, 2), 16) / 255;
+  const g = parseInt(cleanHex.substring(2, 4), 16) / 255;
+  const b = parseInt(cleanHex.substring(4, 6), 16) / 255;
+
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  let h = 0;
+  let s = 0;
+  const l = (max + min) / 2;
+
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r:
+        h = (g - b) / d + (g < b ? 6 : 0);
+        break;
+      case g:
+        h = (b - r) / d + 2;
+        break;
+      case b:
+        h = (r - g) / d + 4;
+        break;
+    }
+    h = Math.round(h * 60);
+  }
+
+  const sPct = Math.round(s * 100);
+  const lPct = Math.round(l * 100);
+  const hslStr = `${h} ${sPct}% ${lPct}%`;
+  const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+  const isLight = luminance > 0.55;
+
+  return { hslStr, isLight };
+}
+
 export function StoreProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
   const [state, setState] = useState<AppState>(() => loadAppState());
@@ -32,6 +70,52 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     saveAppState(state);
   }, [state]);
+
+  // Dynamic Theme Switching: When activeCategory changes, switch whole app's theme colors
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const root = document.documentElement;
+
+    if (activeCategory === 'all') {
+      // Default SHOPSHUD neon theme
+      root.style.setProperty('--primary', '213 100% 58%');
+      root.style.setProperty('--primary-foreground', '225 68% 7%');
+      root.style.setProperty('--ring', '213 100% 62%');
+      root.style.setProperty('--sidebar-primary', '213 100% 58%');
+      root.style.setProperty('--app-theme-color', '#00F0FF');
+      root.style.setProperty('--app-theme-glow', 'rgba(0, 240, 255, 0.45)');
+    } else {
+      const categoryColors: Record<CategoryId, string> = {
+        music: '#00F0FF',
+        photo: '#3B82F6',
+        drawing: '#A855F7',
+        exam: '#06B6D4',
+        ebook: '#F59E0B',
+        home: '#EAB308',
+        electronics: '#3B82F6',
+        beauty: '#EC4899',
+        sport: '#10B981',
+        fashion: '#F43F5E',
+        desk: '#6366F1',
+        food: '#F97316',
+        baby: '#FB7185',
+        travel: '#14B8A6',
+        auto: '#EF4444',
+        pets: '#84CC16',
+        books: '#D97706',
+      };
+
+      const targetHex = categoryColors[activeCategory] || '#00F0FF';
+      const { hslStr, isLight } = hexToHsl(targetHex);
+
+      root.style.setProperty('--primary', hslStr);
+      root.style.setProperty('--primary-foreground', isLight ? '225 68% 7%' : '0 0% 100%');
+      root.style.setProperty('--ring', hslStr);
+      root.style.setProperty('--sidebar-primary', hslStr);
+      root.style.setProperty('--app-theme-color', targetHex);
+      root.style.setProperty('--app-theme-glow', `${targetHex}55`);
+    }
+  }, [activeCategory]);
 
   const addFile = useCallback(
     (data: Omit<DigitalFile, 'id' | 'createdAt' | 'downloadCount' | 'rating'>): DigitalFile => {
@@ -101,8 +185,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         fileFormat: file.fileFormat,
         fileSize: file.fileSize,
         licenseType: file.licenseType,
+        sellerName: file.sellerName,
+        sellerLineId: file.sellerLineId || '@shopshud_seller',
         purchasedAt: new Date().toISOString(),
-        downloadToken: `dl_${Math.random().toString(36).substring(2, 12)}`,
       };
 
       setState((prev) => ({
@@ -114,8 +199,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       }));
 
       toast({
-        title: file.price === 0 ? 'รับไฟล์ฟรีสำเร็จ!' : 'ชำระเงินและรับไฟล์สำเร็จ!',
-        description: `สามารถดาวน์โหลดไฟล์ "${file.title}" ได้ทันทีจากหน้าโปรไฟล์ของคุณ`,
+        title: 'บันทึกรายการสั่งซื้อเรียบร้อย!',
+        description: `เปิดแชท LINE กับ ${file.sellerName} (${file.sellerLineId || '@shopshud_seller'}) เพื่อชำระเงินและรับไฟล์ได้ทันที`,
       });
 
       return record;

@@ -1,11 +1,18 @@
+import catMusic from '@/assets/images/cat_music_sheet_1792737285960.jpg';
+import catPhoto from '@/assets/images/cat_photo_lens_1792737286086.jpg';
+import catDrawing from '@/assets/images/cat_drawing_art_1792737286254.jpg';
+import catExam from '@/assets/images/cat_exam_learning_1792737288280.jpg';
+import catEbook from '@/assets/images/cat_ebook_novel_1792737287503.jpg';
+import catHouse from '@/assets/images/cat_house_plan_1792739923632.jpg';
+
 export type CategoryId =
   | 'music'
   | 'photo'
   | 'drawing'
   | 'exam'
   | 'ebook'
-  | 'electronics'
   | 'home'
+  | 'electronics'
   | 'beauty'
   | 'sport'
   | 'fashion'
@@ -26,6 +33,8 @@ export interface CategoryDefinition {
   image: string;
   fileExtensions: string[];
   accentColor: string;
+  colorId: string;
+  colorLabel: string;
 }
 
 export type LicenseType = 'personal' | 'commercial' | 'exclusive';
@@ -36,13 +45,16 @@ export interface DigitalFile {
   category: CategoryId;
   description: string;
   price: number; // in THB, 0 = Free
-  fileFormat: string; // e.g. "MP3", "PDF", "PNG", "PSD", "EPUB"
+  fileFormat: string; // e.g. "MP3", "PDF", "PNG", "PSD", "EPUB", "DWG"
   fileSize: string; // e.g. "18.5 MB"
   licenseType: LicenseType;
-  previewUrl?: string;
+  previewUrl?: string; // ภาพตัวอย่างสินค้า
+  sampleSnippet?: string; // เนื้อหาตัวอย่าง/แนวคิดตัวอย่างที่มีลายน้ำปิดทับ
   fileName?: string;
   sellerName: string;
   sellerContact?: string;
+  sellerLineId: string; // LINE ID สำหรับติดต่อซื้อขายและส่งไฟล์
+  sellerPhone?: string; // เบอร์โทรศัพท์ผู้ขาย
   downloadCount: number;
   rating: number;
   createdAt: string;
@@ -53,8 +65,14 @@ export interface UserProfile {
   handle: string;
   bio: string;
   email: string;
-  promptPay: string;
+  phoneNumber: string; // เบอร์โทรศัพท์สำหรับติดต่อสอบถาม (แทนพร้อมเพย์)
+  lineId: string; // LINE ID ผู้ขาย สำหรับซื้อขายและส่งไฟล์
   avatarUrl?: string;
+  bannerUrl?: string;
+  bannerTheme?: string; // 'aurora' | 'cyber' | 'studio' | 'deep' | 'zen'
+  avatarBorderColor?: string; // e.g. '#00F0FF', '#06C755', '#A855F7', '#EAB308'
+  storeTagline?: string; // สโลแกนร้านขายความคิด
+  ideaManifesto?: string; // ปรัชญาความคิด / Idea Manifesto
   joinedDate: string;
 }
 
@@ -67,8 +85,10 @@ export interface PurchaseRecord {
   fileFormat: string;
   fileSize: string;
   licenseType: LicenseType;
+  sellerName: string;
+  sellerLineId: string;
   purchasedAt: string;
-  downloadToken: string;
+  downloadToken?: string;
 }
 
 export const CATEGORIES: CategoryDefinition[] = [
@@ -78,9 +98,11 @@ export const CATEGORIES: CategoryDefinition[] = [
     nameEn: 'Music & Lyrics',
     tagline: 'แทร็กดนตรี ซาวด์เอฟเฟกต์ และเนื้อเพลงพร้อมคอร์ด',
     description: 'ไฟล์เสียงดนตรี แบคกิ้งแทร็ก บีทเพลง จิงเกิ้ลโฆษณา และเนื้อเพลงลิขสิทธิ์แท้',
-    image: '/src/assets/images/cat_music_sheet_1792737285960.jpg',
+    image: catMusic,
     fileExtensions: ['.mp3', '.wav', '.midi', '.flac', '.pdf'],
-    accentColor: 'from-amber-600/90 to-stone-900',
+    accentColor: 'from-cyan-500/35 via-blue-500/15',
+    colorId: '#00F0FF',
+    colorLabel: 'CYAN-01',
   },
   {
     id: 'photo',
@@ -88,9 +110,11 @@ export const CATEGORIES: CategoryDefinition[] = [
     nameEn: 'Photos & Images',
     tagline: 'ภาพถ่ายความละเอียดสูงและสต็อกภาพพร้อมใช้งาน',
     description: 'ภาพถ่ายบุคคล ทิวทัศน์ อาหาร สถาปัตยกรรม และสต็อกโฟโต้สำหรับงานพิมพ์และเว็บ',
-    image: '/src/assets/images/cat_photo_lens_1792737286086.jpg',
+    image: catPhoto,
     fileExtensions: ['.jpg', '.jpeg', '.raw', '.png', '.tiff'],
-    accentColor: 'from-sky-700/90 to-slate-900',
+    accentColor: 'from-blue-500/35 via-indigo-500/15',
+    colorId: '#3B82F6',
+    colorLabel: 'AZURE-02',
   },
   {
     id: 'drawing',
@@ -98,9 +122,11 @@ export const CATEGORIES: CategoryDefinition[] = [
     nameEn: 'Drawings & Digital Art',
     tagline: 'ภาพวาดดิจิทัล ลายเส้น เวกเตอร์ และไอคอน',
     description: 'ภาพประกอบดิจิทัล คาแรคเตอร์ดีไซน์ ลายเส้นเวกเตอร์ แปรง Procreate และกราฟิก',
-    image: '/src/assets/images/cat_drawing_art_1792737286254.jpg',
+    image: catDrawing,
     fileExtensions: ['.png', '.psd', '.procreate', '.ai', '.svg'],
-    accentColor: 'from-emerald-700/90 to-stone-950',
+    accentColor: 'from-violet-500/35 via-fuchsia-500/10',
+    colorId: '#A855F7',
+    colorLabel: 'VIOLET-03',
   },
   {
     id: 'exam',
@@ -108,9 +134,11 @@ export const CATEGORIES: CategoryDefinition[] = [
     nameEn: 'Exams & Learning',
     tagline: 'คลังข้อสอบ สรุปเนื้อหา และใบงานการศึกษา',
     description: 'แบบฝึกหัด สรุปสอบเตรียมตัวเข้ามหาวิทยาลัย เอกสารประกอบการสอน และข้อสอบพร้อมเฉลย',
-    image: '/src/assets/images/cat_exam_learning_1792737288280.jpg',
+    image: catExam,
     fileExtensions: ['.pdf', '.docx', '.pptx', '.zip'],
-    accentColor: 'from-indigo-700/90 to-slate-950',
+    accentColor: 'from-sky-400/35 via-blue-500/10',
+    colorId: '#06B6D4',
+    colorLabel: 'TEAL-04',
   },
   {
     id: 'ebook',
@@ -118,9 +146,11 @@ export const CATEGORIES: CategoryDefinition[] = [
     nameEn: 'E-Books & Novels',
     tagline: 'นิยายดิจิทัล วรรณกรรม และหนังสืออิเล็กทรอนิกส์',
     description: 'หนังสือนิยาย เรื่องสั้น สารคดี คู่มือพัฒนาตนเอง ในรูปแบบพร้อมเปิดอ่านได้ทุกอุปกรณ์',
-    image: '/src/assets/images/cat_ebook_novel_1792737287503.jpg',
+    image: catEbook,
     fileExtensions: ['.pdf', '.epub', '.mobi'],
-    accentColor: 'from-rose-700/90 to-stone-900',
+    accentColor: 'from-amber-400/25 via-yellow-500/10',
+    colorId: '#F59E0B',
+    colorLabel: 'AMBER-05',
   },
   {
     id: 'home',
@@ -128,11 +158,13 @@ export const CATEGORIES: CategoryDefinition[] = [
     nameEn: 'House Plans & Architecture',
     tagline: 'แบบแปลนบ้าน ภาพเรนเดอร์ และโมเดลสถาปัตยกรรม',
     description: 'รวมแบบบ้าน แบบแปลน และไฟล์โมเดลสำหรับงานออกแบบสถาปัตยกรรม',
-    image: '/house-category.svg',
+    image: catHouse,
     fileExtensions: ['.pdf', '.dwg', '.skp', '.fbx', '.obj'],
-    accentColor: 'from-amber-500/90 to-blue-950',
+    accentColor: 'from-yellow-400/35 via-amber-500/20',
+    colorId: '#EAB308',
+    colorLabel: 'GOLD-06',
   },
-]; 
+];
 
 export const CATEGORY_MAP: Record<CategoryId, CategoryDefinition> = Object.fromEntries(
   CATEGORIES.map((c) => [c.id, c])

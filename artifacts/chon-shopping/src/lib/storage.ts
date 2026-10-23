@@ -10,12 +10,18 @@ export interface AppState {
 }
 
 export const initialProfile: UserProfile = {
-  displayName: 'ผู้สร้างดิจิทัล',
-  handle: '@creator_digital',
-  bio: 'สร้างสรรค์และแบ่งปันไฟล์ดิจิทัลคุณภาพ มีลิขสิทธิ์ถูกต้อง พร้อมส่งมอบงานรวดเร็ว',
-  email: 'creator@shopshud.local',
-  promptPay: '081-999-8888',
+  displayName: 'ร้านความคิดสร้างสรรค์ (My Idea Store)',
+  handle: '@my_ideastore',
+  bio: 'พื้นที่จำหน่ายความคิด ลิขสิทธิ์ทางปัญญา แผนงาน และผลงานสร้างสรรค์ต้นฉบับ ติดต่อสอบถาม ซื้อขาย และส่งมอบไฟล์ทางเบอร์โทรและ LINE โดยตรง',
+  email: 'ideastore@shopshud.local',
+  phoneNumber: '081-999-8888',
+  lineId: '@shopshud_seller',
   avatarUrl: '',
+  bannerUrl: '',
+  bannerTheme: 'aurora',
+  avatarBorderColor: '#00F0FF',
+  storeTagline: 'คลังความคิดและลิขสิทธิ์ไอเดียต้นฉบับ จากสมองสู่ชิ้นงานจริง',
+  ideaManifesto: 'เราเชื่อว่าทุกความคิดที่ผ่านการตกผลึกมีคุณค่ามหาศาล ที่นี่คือร้านค้าส่วนตัวที่นำเสนอแนวคิด โครงสร้างระบบ แผนธุรกิจ โน้ตเพลง และผลงานลิขสิทธิ์ที่คุณสามารถนำไปต่อยอดได้จริง ติดต่อเราได้ทันทีทางโทรศัพท์และ LINE',
   joinedDate: 'ตุลาคม 2026',
 };
 
@@ -34,10 +40,16 @@ export function loadAppState(): AppState {
     const data = JSON.parse(raw);
     if (!data || data.version !== 1) return defaultState();
 
+    const loadedProfile = data.profile ? { ...initialProfile, ...data.profile } : initialProfile;
+    // Migrate promptPay to phoneNumber if present in old saved state
+    if (!loadedProfile.phoneNumber && (data.profile as any)?.promptPay) {
+      loadedProfile.phoneNumber = (data.profile as any).promptPay;
+    }
+
     return {
       version: 1,
       files: Array.isArray(data.files) ? data.files : [],
-      profile: data.profile ? { ...initialProfile, ...data.profile } : initialProfile,
+      profile: loadedProfile,
       purchases: Array.isArray(data.purchases) ? data.purchases : [],
     };
   } catch (error) {

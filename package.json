@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "dev": "npm run dev --workspace=@workspace/chon-shopping",
-    "build": "npm run build --workspace=@workspace/chon-shopping",
+    "build": "npm run build --workspace=@workspace/chon-shopping && node -e \"const fs = require('fs'); fs.cpSync('dist', 'artifacts/chon-shopping/dist', { recursive: true });\"",
     "lint": "tsc --build && npm run typecheck --workspaces --if-present",
     "typecheck": "tsc --build && npm run typecheck --workspaces --if-present"
   },
