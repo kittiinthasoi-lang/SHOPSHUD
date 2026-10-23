@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "ช้อปชัด — AI Shopping Demo"
+description = "เว็บแอปภาษาไทยสำหรับค้นหาสินค้าตัวอย่างหลายร้าน เปรียบเทียบสินค้า ผู้ช่วยเลือกสินค้าแบบออฟไลน์ และสถิติจำลอง ไม่มีการเชื่อมต่อร้านค้าหรือ affiliate จริง"
+version = "1.0.0"
+id = "artifacts/chon-shopping"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25791
+
+[services.development]
+run = "pnpm --filter @workspace/chon-shopping run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/chon-shopping", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/chon-shopping/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25791"
+BASE_PATH = "/"

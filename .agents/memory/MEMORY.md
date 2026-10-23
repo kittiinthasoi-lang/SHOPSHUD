@@ -1,0 +1,1 @@
+- [ขอบเขต Shopping Demo](shopping-demo-scope.md) — เดโมตลาดไทยเท่านั้น ห้ามเชื่อมบริการภายนอกหรือ affiliate จริง และห้าม publish อัตโนมัติ

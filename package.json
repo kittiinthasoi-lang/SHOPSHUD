@@ -1,0 +1,21 @@
+{
+  "name": "workspace",
+  "version": "0.0.0",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "artifacts/*",
+    "lib/*",
+    "scripts"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=@workspace/chon-shopping",
+    "build": "npm run build --workspace=@workspace/chon-shopping",
+    "lint": "tsc --build && npm run typecheck --workspaces --if-present",
+    "typecheck": "tsc --build && npm run typecheck --workspaces --if-present"
+  },
+  "devDependencies": {
+    "prettier": "^3.9.10",
+    "typescript": "~5.9.3"
+  }
+}
