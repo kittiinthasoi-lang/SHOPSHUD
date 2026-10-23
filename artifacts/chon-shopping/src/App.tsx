@@ -6,6 +6,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { StoreProvider } from '@/lib/store';
 import Home from '@/pages/home';
+import DealsPage from '@/pages/deals';
 import StorePage from '@/pages/store';
 import ProfilePage from '@/pages/profile';
 import NotFound from '@/pages/not-found';
@@ -21,7 +22,7 @@ function AppRoutes() {
         <Route path="/store" component={StorePage} />
         <Route path="/profile" component={ProfilePage} />
         {/* Backward compatible redirects to Home */}
-        <Route path="/deals" component={Home} />
+        <Route path="/deals" component={DealsPage} />
         <Route path="/compare" component={Home} />
         <Route path="/assistant" component={Home} />
         <Route path="/admin" component={StorePage} />

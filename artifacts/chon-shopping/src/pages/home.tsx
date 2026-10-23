@@ -8,6 +8,7 @@ import {
   FileText,
   Filter,
   GraduationCap,
+  House,
   Image as ImageIcon,
   Music,
   Paintbrush,
@@ -73,6 +74,8 @@ export default function Home() {
         return <GraduationCap className="h-5 w-5" />;
       case 'ebook':
         return <BookOpen className="h-5 w-5" />;
+      case 'home':
+        return <House className="h-5 w-5" />;
       default:
         return <FileText className="h-5 w-5" />;
     }
@@ -152,7 +155,7 @@ export default function Home() {
                 className={`group relative flex flex-col text-left overflow-hidden rounded-xl border bg-card/95 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg ${
                   isSelected
                     ? 'border-primary ring-2 ring-primary/80 shadow-lg'
-                    : ({ music: 'border-cyan-400/50 hover:border-cyan-300', photo: 'border-blue-400/50 hover:border-blue-300', drawing: 'border-violet-400/50 hover:border-violet-300', exam: 'border-sky-400/50 hover:border-sky-300', ebook: 'border-amber-400/60 hover:border-amber-300' } as Record<CategoryId, string>)[cat.id]
+                    : ({ music: 'border-cyan-400/50 hover:border-cyan-300', photo: 'border-blue-400/50 hover:border-blue-300', drawing: 'border-violet-400/50 hover:border-violet-300', exam: 'border-sky-400/50 hover:border-sky-300', ebook: 'border-amber-400/60 hover:border-amber-300', home: 'border-amber-400/70 hover:border-amber-300' } as Record<CategoryId, string>)[cat.id]
                 }`}
               >
                 {/* Image Cover */}
@@ -163,8 +166,8 @@ export default function Home() {
                     referrerPolicy="no-referrer"
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
-                  <div className={`absolute inset-0 bg-gradient-to-br ${({ music: "from-cyan-500/35 via-blue-500/15", photo: "from-blue-500/35 via-indigo-500/15", drawing: "from-violet-500/35 via-fuchsia-500/10", exam: "from-sky-400/35 via-blue-500/10", ebook: "from-amber-400/25 via-yellow-500/10" } as Record<CategoryId, string>)[cat.id]} to-transparent`} />
-                  <div className={`absolute top-2 left-2 flex h-7 w-7 items-center justify-center rounded-lg backdrop-blur-sm ${({ music: "bg-cyan-400/20 text-cyan-200", photo: "bg-blue-400/20 text-blue-200", drawing: "bg-violet-400/20 text-violet-200", exam: "bg-sky-400/20 text-sky-200", ebook: "bg-amber-400/20 text-amber-200" } as Record<CategoryId, string>)[cat.id]}`}>
+                  <div className={`absolute inset-0 bg-gradient-to-br ${({ music: "from-cyan-500/35 via-blue-500/15", photo: "from-blue-500/35 via-indigo-500/15", drawing: "from-violet-500/35 via-fuchsia-500/10", exam: "from-sky-400/35 via-blue-500/10", ebook: "from-amber-400/25 via-yellow-500/10", home: "from-amber-400/35 via-blue-500/20" } as Record<CategoryId, string>)[cat.id]} to-transparent`} />
+                  <div className={`absolute top-2 left-2 flex h-7 w-7 items-center justify-center rounded-lg backdrop-blur-sm ${({ music: "bg-cyan-400/20 text-cyan-200", photo: "bg-blue-400/20 text-blue-200", drawing: "bg-violet-400/20 text-violet-200", exam: "bg-sky-400/20 text-sky-200", ebook: "bg-amber-400/20 text-amber-200", home: "bg-amber-400/20 text-amber-200" } as Record<CategoryId, string>)[cat.id]}`}>
                     {getCategoryIcon(cat.id)}
                   </div>
                   <span className="absolute bottom-2 right-2 text-[10px] font-semibold text-white/95 bg-slate-950/70 px-1.5 py-0.5 rounded-md backdrop-blur-xs">
@@ -235,15 +238,15 @@ export default function Home() {
 
           <div className="flex items-center justify-between sm:justify-end gap-3 text-xs text-muted-foreground">
             <span>
-              แสดง {filteredFiles.length} รายการ
+              แสดงผลงานแนะนำ {Math.min(filteredFiles.length, 4)} จาก {filteredFiles.length} รายการ
               {activeCategory !== 'all' && ` ในหมวด ${CATEGORY_MAP[activeCategory]?.name}`}
             </span>
             <Link
-              href="/store"
+              href="/deals"
               className="inline-flex items-center gap-1 text-primary font-semibold hover:underline"
             >
               <PlusCircle className="h-3.5 w-3.5" />
-              <span>ลงขายในหน้านี้</span>
+              <span>ดูสินค้าทั้งหมด</span>
             </Link>
           </div>
         </div>
@@ -262,7 +265,7 @@ export default function Home() {
             <p className="mt-1.5 max-w-md mx-auto text-sm text-muted-foreground">
               {activeCategory !== 'all'
                 ? `คุณสามารถเป็นผู้สร้างคนแรกที่ลงขายไฟล์ในหมวดหมู่นี้ได้ง่ายๆ ที่หน้าร้านค้า`
-                : 'เริ่มต้นลงขายผลงานชิ้นแรกของคุณ ไฟล์จะถูกจัดหมวดหมู่อัตโนมัติและแสดงที่หน้าแรกทันที'}
+                : 'เริ่มต้นลงขายผลงานชิ้นแรกของคุณ ผลงานที่เปิดขายจะแสดงในหน้าร้านค้าแยกต่างหาก'}
             </p>
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
               <Link
@@ -270,13 +273,13 @@ export default function Home() {
                 className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm hover:opacity-95 active:scale-95 transition-all"
               >
                 <PlusCircle className="h-4 w-4" />
-                <span>ไปที่หน้าร้านค้าเพื่อลงขายไฟล์</span>
+                <span>ไปที่หน้าลงขายไฟล์</span>
               </Link>
             </div>
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-3 sm:gap-4">
-            {filteredFiles.map((file) => {
+            {filteredFiles.slice(0, 4).map((file) => {
               const cat = CATEGORY_MAP[file.category];
               const owned = hasPurchased(file.id);
 
