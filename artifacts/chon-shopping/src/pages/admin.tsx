@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 import { ClipboardCheck, Database, FileLock2, LockKeyhole, Plus, RefreshCw } from 'lucide-react';
 import { useDocMeta } from '@/lib/use-doc-meta';
 
@@ -42,7 +42,7 @@ export default function Admin() {
     finally { setBusy(false); }
   }
 
-  async function createDraft(event: React.FormEvent<HTMLFormElement>) {
+  async function createDraft(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!savedToken) { setMessage('ยืนยัน Owner token ก่อน'); return; }
     setBusy(true); setMessage('');
